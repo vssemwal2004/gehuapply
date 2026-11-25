@@ -101,9 +101,25 @@
           </ol>
         </div>
       </div>
+      <!-- EduLeap CRM Lead Capture Widget: GEHU Apply -->
+      <div class="hero__slot" id="apply" aria-label="Admissions enquiry form">
+        <div data-eduleap-widget="true"
+             data-widget-key="gehu-apply"
+             data-tenant="graphic-era"
+             data-api-url="https://staff-crm.vsilabs.co/api/leads/ingest/widget"
+             data-campus="main-campus"
+             data-theme="light"
+             data-primary-color="#059669"
+             data-title="Enquire Now"
+             data-subtitle="Take the first step towards your future. Speak with an admissions advisor."
+             data-button-text="Submit Inquiry"
+             data-fields="lastname,interest,city,state,remarks"
+             data-scope-level="institution"
+             data-institution-id="68252676-2179-4035-a970-e77d9fe379d2"
+             data-success-message="Thank you! Your information has been received. Our admissions team will be in touch shortly.">
+        </div>
+      </div>
     </div>
-    <!-- FORM SLOT: no form for now. Every "Apply" link on the page points to #apply; place the application/enquiry form here later. -->
-    <div class="hero__slot" id="apply"></div>
     <svg class="ridge ridge--hero" aria-hidden="true"><use href="#ridge"/></svg>
   </section>
 
@@ -358,5 +374,6 @@
   <a class="dock__btn" href="#programmes"><svg aria-hidden="true"><use href="#i-cap"/></svg>Programmes</a>
   <a class="dock__btn dock__btn--gold" href="#apply">Apply now<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
 </nav>
+<script src="https://staff-crm.vsilabs.co/widget/v1/eduleap-widget.js" async defer></script>
 </body>
 </html>
