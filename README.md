@@ -3,15 +3,21 @@
 Graphic Era Hill University (Dehradun · Bhimtal · Haldwani). Same design system as the GEU
 admissions page (`D:\CP\visitpage`), with GEHU content and photos.
 
-Pure HTML + CSS. No JavaScript, no build step, no server code.
+HTML + CSS, no build step, no server code. The only JavaScript is the EduLeap enquiry
+widget and the small file that themes it.
 
 ```
 index.html              the page
 assets/css/style.css    all styles (mobile-first; breakpoints 560 / 861 / 1100px)
+assets/js/enquiry-theme.js  restyles the EduLeap widget to match the hero (presentation only)
 assets/fonts/           Sora + Inter (woff2)
 assets/brand/           GEHU logo (logo-color.png = official full-colour logo, header; logo.svg = official white logo, footer)
 assets/img/<section>/   images, named <name>-<width>.webp (used via srcset); brand/ holds the favicon PNGs
 ```
+
+## Cache busting
+`index.html` loads `style.css?v=N` and `enquiry-theme.js?v=N`. Bump `N` whenever either file
+changes, or returning visitors keep the old cached copy.
 
 ## Preview
 Serve the folder over http (webfonts are blocked on `file://`), e.g.
@@ -21,12 +27,22 @@ Serve the folder over http (webfonts are blocked on `file://`), e.g.
 Hero · Tapes · 01 About · 02 Why GEHU · 03 Programmes · 04 Placements ·
 05 Campus · 06 Admissions & scholarships · 07 FAQs · CTA · Footer
 
-## No form (by design, for now)
-There is no application form on the right of the hero, and the side "Apply" tab from the GEU
-page has been removed. Every "Apply" button and every programme link points to `#apply`, an
-empty `<div class="hero__slot" id="apply">` at the bottom of the hero (search for `FORM SLOT`).
-To add a form later, put it in that slot; or, to send students to an existing portal, replace
-`href="#apply"` with the portal URL.
+## Enquiry form (EduLeap CRM widget)
+The right side of the hero (`<div class="hero__slot" id="apply">`) holds the EduLeap lead
+widget, loaded from `staff-crm.vsilabs.co`. Every "Apply" button and programme link points to
+`#apply`. Submissions go straight from the widget to the EduLeap CRM
+(`data-api-url`); this site stores nothing.
+
+- **Fields, title, colour** are set in the CRM admin for widget key `gehu-apply`. The live CRM
+  config overrides the `data-*` attributes in `index.html`, so change fields there.
+- **Look**: the widget renders in a Shadow DOM, so page CSS cannot style it.
+  `assets/js/enquiry-theme.js` injects a stylesheet into that shadow root: navy header band
+  (contour rings, ridge edge, badge, fact chips), white body, two fields per row, placeholders
+  instead of labels, blue submit button. The gold offset slab behind the card is page CSS
+  (`.hero__slot`). It never touches field names, validation or the request, so leads are
+  unaffected.
+  It relies on the vendor's class names (`.el-card`, `.el-input`, …); if EduLeap renames them,
+  the form falls back to the vendor's own styling but still works.
 
 ## Where the content comes from
 - **Placements**: GEHU student placement cards on gehu.ac.in (Batch 2024–2026). Top offer
