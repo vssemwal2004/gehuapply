@@ -8,6 +8,7 @@ widget loader (inline, at the end of `index.html`).
 
 ```
 index.html              the page
+thank-you.html          shown after the enquiry form is submitted (noindex)
 assets/css/style.css    all styles (mobile-first; breakpoints 560 / 861 / 1100px)
 assets/fonts/           Sora + Inter (woff2)
 assets/brand/           GEHU logo (logo-color.png = official full-colour logo, header; logo.svg = official white logo, footer)
@@ -37,12 +38,19 @@ nothing.
   iframe, so page CSS cannot style anything inside it.
 - **Card**: same design as the GEU page (`D:\CP\visitpage`): navy header band with contour
   rings, ridge edge and a "2027–28" badge; white body; soft shadow. All page CSS (`.hero__slot`).
-- **Height**: `--form-h` on `.hero__slot` in `style.css` sets the iframe height (currently
-  760px, the value from the NoPaperForms embed code); keep `data-height` in `index.html` equal.
-  On the live domain: if the form shows its own scrollbar, raise it; if there is blank space
-  under Submit, lower it.
+- **Height**: the NoPaperForms loader makes a fixed-height iframe and cannot resize it to the
+  form (cross-origin), so `--form-h` on `.hero__slot` in `style.css` sets the height (currently
+  580px); keep `data-height` in `index.html` equal. To find the exact value on the live domain,
+  open `https://apply.gehu.ac.in/?formh=560` and change the number until the card ends just
+  under the Submit button with no scrollbar inside the form; then put that value in both places.
 - **Local preview**: NoPaperForms only serves whitelisted domains, so on `localhost`, LAN IPs
   and `file://` the iframe (a "403" page) is hidden and the card stays blank at its real size.
+- **Thank-you page** (`thank-you.html`, same design as the GEU page): set the form's
+  success/redirect URL in the NoPaperForms admin to `https://apply.gehu.ac.in/thank-you.html`.
+  NoPaperForms opens that URL inside the form's iframe; the page detects this, shows a compact
+  "Enquiry received" card for a moment and moves the whole browser tab to the full thank-you
+  page. This needs the thank-you page on the same domain as the landing page. Put conversion
+  tags (Google Ads, Meta, GA4) in its `<head>` inside `if (window.top === window.self)`.
 - **Desktop**: a gold "Apply 2027–28" tab slides in on the right edge once the hero is scrolled
   past (CSS scroll-driven animation; mobile uses the bottom dock instead).
 
