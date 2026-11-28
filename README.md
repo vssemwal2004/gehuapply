@@ -3,21 +3,20 @@
 Graphic Era Hill University (Dehradun · Bhimtal · Haldwani). Same design system as the GEU
 admissions page (`D:\CP\visitpage`), with GEHU content and photos.
 
-HTML + CSS, no build step, no server code. The only JavaScript is the EduLeap enquiry
-widget and the small file that themes it.
+HTML + CSS, no build step, no server code. The only JavaScript is the NoPaperForms enquiry
+widget loader (inline, at the end of `index.html`).
 
 ```
 index.html              the page
 assets/css/style.css    all styles (mobile-first; breakpoints 560 / 861 / 1100px)
-assets/js/enquiry-theme.js  restyles the EduLeap widget to match the hero (presentation only)
 assets/fonts/           Sora + Inter (woff2)
 assets/brand/           GEHU logo (logo-color.png = official full-colour logo, header; logo.svg = official white logo, footer)
 assets/img/<section>/   images, named <name>-<width>.webp (used via srcset); brand/ holds the favicon PNGs
 ```
 
 ## Cache busting
-`index.html` loads `style.css?v=N` and `enquiry-theme.js?v=N`. Bump `N` whenever either file
-changes, or returning visitors keep the old cached copy.
+`index.html` loads `style.css?v=N`. Bump `N` whenever the file changes, or returning visitors
+keep the old cached copy.
 
 ## Preview
 Serve the folder over http (webfonts are blocked on `file://`), e.g.
@@ -27,22 +26,25 @@ Serve the folder over http (webfonts are blocked on `file://`), e.g.
 Hero · Tapes · 01 About · 02 Why GEHU · 03 Programmes · 04 Placements ·
 05 Campus · 06 Admissions & scholarships · 07 FAQs · CTA · Footer
 
-## Enquiry form (EduLeap CRM widget)
-The right side of the hero (`<div class="hero__slot" id="apply">`) holds the EduLeap lead
-widget, loaded from `staff-crm.vsilabs.co`. Every "Apply" button and programme link points to
-`#apply`. Submissions go straight from the widget to the EduLeap CRM
-(`data-api-url`); this site stores nothing.
+## Enquiry form (NoPaperForms widget)
+The right side of the hero (`<div class="hero__slot" id="apply">`) holds the NoPaperForms
+widget (`<div class="npf_wgts" data-w="0285642c…">`), loaded by
+`ke9zjmq4xn.in4.widgets.nopaperforms.com/vemwgts.js`. Every "Apply" button and programme link
+points to `#apply`. Submissions go straight from the widget to NoPaperForms; this site stores
+nothing.
 
-- **Fields, title, colour** are set in the CRM admin for widget key `gehu-apply`. The live CRM
-  config overrides the `data-*` attributes in `index.html`, so change fields there.
-- **Look**: the widget renders in a Shadow DOM, so page CSS cannot style it.
-  `assets/js/enquiry-theme.js` injects a stylesheet into that shadow root: navy header band
-  (contour rings, ridge edge, badge, fact chips), white body, two fields per row, placeholders
-  instead of labels, blue submit button. The gold offset slab behind the card is page CSS
-  (`.hero__slot`). It never touches field names, validation or the request, so leads are
-  unaffected.
-  It relies on the vendor's class names (`.el-card`, `.el-input`, …); if EduLeap renames them,
-  the form falls back to the vendor's own styling but still works.
+- **Fields, colours, button** are set in the NoPaperForms admin. The form is a cross-origin
+  iframe, so page CSS cannot style anything inside it.
+- **Card**: same design as the GEU page (`D:\CP\visitpage`): navy header band with contour
+  rings, ridge edge and a "2027–28" badge; white body; soft shadow. All page CSS (`.hero__slot`).
+- **Height**: `--form-h` on `.hero__slot` in `style.css` sets the iframe height (currently
+  760px, the value from the NoPaperForms embed code); keep `data-height` in `index.html` equal.
+  On the live domain: if the form shows its own scrollbar, raise it; if there is blank space
+  under Submit, lower it.
+- **Local preview**: NoPaperForms only serves whitelisted domains, so on `localhost`, LAN IPs
+  and `file://` the iframe (a "403" page) is hidden and the card stays blank at its real size.
+- **Desktop**: a gold "Apply 2027–28" tab slides in on the right edge once the hero is scrolled
+  past (CSS scroll-driven animation; mobile uses the bottom dock instead).
 
 ## Where the content comes from
 - **Placements**: GEHU student placement cards on gehu.ac.in (Batch 2024–2026). Top offer
